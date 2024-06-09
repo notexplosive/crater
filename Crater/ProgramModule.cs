@@ -13,14 +13,14 @@ public class ProgramModule
     {
         _luaRuntime = luaRuntime;
     }
-    
+
     [LuaMember("run")]
     public DynValue Run(string runCommand, DynValue args)
     {
         var finalArgs = ProgramModule.ExtractArgs(args);
         return RunAndGetOutput(new ExternalProgram(runCommand), finalArgs);
     }
-    
+
     [LuaMember("runSilent")]
     public DynValue RunSilent(string runCommand, DynValue args)
     {
@@ -30,6 +30,19 @@ public class ProgramModule
             SuppressLogging = true
         };
         return RunAndGetOutput(program, finalArgs);
+    }
+
+    [LuaMember("runFork")]
+    public void RunFork(string runCommand, DynValue args)
+    {
+        var finalArgs = ProgramModule.ExtractArgs(args);
+        var program = new ExternalProgram(runCommand)
+        {
+            SuppressLogging = true,
+            IsAsync = true,
+        };
+        
+        program.RunWithArgs(finalArgs);
     }
 
     private DynValue RunAndGetOutput(ExternalProgram program, string[] finalArgs)
@@ -58,7 +71,10 @@ public class ProgramModule
         }
         else
         {
-            Log.Error(ExternalProgram.Prefix,$"Invalid args to program.run, expected (string, table)");
+            if (!args.IsNil())
+            {
+                Log.Error(ExternalProgram.Prefix, "Invalid args to program.run, expected (string, table)");
+            }
         }
 
         return finalArgs.ToArray();

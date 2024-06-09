@@ -2,4 +2,6 @@
 local string_util = lib("string_util")
 local version = lib("version")
 
-print("hello world")
+program.runFork("notepad")
+
+print("hello")

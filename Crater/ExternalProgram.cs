@@ -27,13 +27,20 @@ public class ExternalProgram
     }
 
     public bool SuppressLogging { get; set; }
+    public bool IsAsync { get; set; }
 
     public ProgramOutput RunWithArgs(params string[] argumentList)
     {
+        if (IsAsync)
+        {
+            SuppressLogging = true;
+        }
+
         var workingDirectory = Directory.GetCurrentDirectory();
 
         Log.Info(ExternalProgram.Prefix,
-            (SuppressLogging ? "[Silent] " : "") + _runPath + (argumentList.Length > 0 ? " " : "") + string.Join(" ", argumentList));
+            (SuppressLogging ? "[Silent] " : "") + _runPath + (argumentList.Length > 0 ? " " : "") +
+            string.Join(" ", argumentList));
 
         var wasSuccessful = true;
         var totalOutput = new List<string>();
@@ -66,9 +73,11 @@ public class ExternalProgram
             {
                 process.Start();
 
-                process.BeginOutputReadLine();
-
-                process.WaitForExit();
+                if (!IsAsync)
+                {
+                    process.BeginOutputReadLine();
+                    process.WaitForExit();
+                }
             }
             catch (Win32Exception)
             {
