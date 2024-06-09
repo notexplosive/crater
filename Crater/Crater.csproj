@@ -18,7 +18,11 @@
     <ItemGroup>
       <ProjectReference Include="..\explogine\Library\ExplogineCore\ExplogineCore.csproj" />
     </ItemGroup>
-
+    
+    <PropertyGroup>
+        <ApplicationIcon>Crater.ico</ApplicationIcon>
+    </PropertyGroup>
+    
     <ItemGroup>
       <None Update="test.crater">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>

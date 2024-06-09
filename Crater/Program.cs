@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using Crater;
 using ExplogineCore;
 using ExplogineCore.Lua;
@@ -11,11 +10,20 @@ var argsList = args.ToList();
 
 var localFiles = new RealFileSystem(AppDomain.CurrentDomain.BaseDirectory);
 var workingFiles = new RealFileSystem(Directory.GetCurrentDirectory());
-var appDataFiles = new RealFileSystem(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-    "NotExplosive", Assembly.GetEntryAssembly()!.GetName().Name));
 var libraryFiles = localFiles.GetDirectory("Library");
 
 var corePrefix = "🌙";
+
+var version = localFiles.ReadFile("VERSION").Trim();
+
+if (!string.IsNullOrEmpty(version))
+{
+    Log.Info(corePrefix, "Crater Version: " + version);
+}
+else
+{
+    Log.Warning(corePrefix, "Unknown version, missing VERSION file");
+}
 
 Dictionary<string, DynValue> libraryCache = new();
 if (args.Length > 0)
@@ -25,7 +33,11 @@ if (args.Length > 0)
 
     if (!workingFiles.HasFile(filePath))
     {
-        Log.Error($"File not found {filePath}");
+        Log.Error(corePrefix, $"File not found {filePath}");
+    }
+    else
+    {
+        Log.Info(corePrefix, $"Running {filePath}");
     }
 
     var content = workingFiles.ReadFile(filePath);
@@ -38,7 +50,7 @@ if (args.Length > 0)
     }
 
     luaRuntime.SetGlobal("args", argsTable);
-    luaRuntime.SetGlobal("files", new FilesModule(luaRuntime, workingFiles));
+    luaRuntime.SetGlobal("files", new FilesModule(luaRuntime, workingFiles, localFiles));
     luaRuntime.SetGlobal("program", new ProgramModule(luaRuntime));
     luaRuntime.SetGlobal("lib", (string path) =>
     {
@@ -59,16 +71,5 @@ if (args.Length > 0)
         Log.FromLua(Log.Severity.Error, luaRuntime.CurrentError.Exception.Message);
         var callstack = luaRuntime.Callstack();
         Log.FromLua(Log.Severity.Error, callstack);
-    }
-
-    Log.Info(corePrefix, "Finished");
-}
-else
-{
-    var version = localFiles.ReadFile("VERSION").Trim();
-
-    if (!string.IsNullOrEmpty(version))
-    {
-        Log.Info(corePrefix, "Crater Version: " + version);
     }
 }

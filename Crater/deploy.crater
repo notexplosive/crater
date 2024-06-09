@@ -1,0 +1,34 @@
+﻿local version = lib("version")
+local dotnet = lib("dotnet")
+local butler = lib("butler")
+
+local outputDirectory = args[1] or ".build"
+
+print("Copying library to local path")
+files.copy("Library", files.localDirectory() .. "/Library")
+
+print("Publishing")
+dotnet.publish(".", outputDirectory)
+
+print("Bumping Version")
+local previousVersion = files.read("VERSION") or "1.0.0"
+newVersion = version.bumpPatch(previousVersion)
+print("New version is: " .. newVersion)
+files.write("VERSION", newVersion)
+
+print("Copying Version File")
+files.copy("VERSION", outputDirectory)
+
+print("Uploading to itch")
+butler.push(outputDirectory, "notexplosive", "crater", "windows")
+
+local productionPath = "D:\\Crater"
+
+print("Deleting old production instance")
+files.deleteDirectory(productionPath)
+
+print("Copying new instance to production")
+files.copy(".build", productionPath)
+
+print("Copying new Library")
+files.copy("Library", productionPath .. "/Library")

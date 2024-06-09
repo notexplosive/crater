@@ -8,54 +8,69 @@ namespace Crater;
 public class FilesModule
 {
     private const string Prefix = "📂";
-    private readonly RealFileSystem _files;
+    private readonly RealFileSystem _workingFiles;
+    private readonly RealFileSystem _localFiles;
     private readonly LuaRuntime _luaRuntime;
 
-    public FilesModule(LuaRuntime luaRuntime, RealFileSystem files)
+    public FilesModule(LuaRuntime luaRuntime, RealFileSystem workingFiles, RealFileSystem localFiles)
     {
         _luaRuntime = luaRuntime;
-        _files = files;
+        _workingFiles = workingFiles;
+        _localFiles = localFiles;
     }
+
+    [LuaMember("workingDirectory")]
+    public string WorkingDirectory()
+    {
+        return _workingFiles.FullNormalizedRootPath;
+    }
+    
+    [LuaMember("localDirectory")]
+    public string LocalDirectory()
+    {
+        return _localFiles.FullNormalizedRootPath;
+    }
+    
 
     [LuaMember("read")]
     public string Read(string path)
     {
-        return _files.ReadFile(path);
+        return _workingFiles.ReadFile(path);
     }
 
     [LuaMember("write")]
     public void Write(string path, string content)
     {
         Log.Info(FilesModule.Prefix, $"Writing to file {path}");
-        _files.WriteToFile(path, content.SplitLines());
+        _workingFiles.WriteToFile(path, content.SplitLines());
     }
 
     [LuaMember("createOrOverwrite")]
     public void CreateOrOverwrite(string path)
     {
         Log.Info(FilesModule.Prefix, $"Overwrite/Create file {path}");
-        _files.CreateOrOverwriteFile(path);
+        _workingFiles.CreateOrOverwriteFile(path);
     }
 
     [LuaMember("create")]
     public void Create(string path)
     {
         Log.Info(FilesModule.Prefix, $"Created file {path}");
-        _files.CreateFile(path);
+        _workingFiles.CreateFile(path);
     }
 
     [LuaMember("createDirectory")]
     public void CreateDirectory(string path)
     {
         Log.Info(FilesModule.Prefix, $"Created directory {path}");
-        _files.GetDirectory(path).CreateDirectory();
+        _workingFiles.GetDirectory(path).CreateDirectory();
     }
 
     [LuaMember("list")]
     public Table ListFiles(string path, bool recursive = false, string extension = "*")
     {
         var result = _luaRuntime.NewTable();
-        foreach (var file in _files.GetFilesAt(path, extension, recursive))
+        foreach (var file in _workingFiles.GetFilesAt(path, extension, recursive))
         {
             result.Append(DynValue.NewString(file));
         }
@@ -66,42 +81,42 @@ public class FilesModule
     [LuaMember("deleteDirectory")]
     public void DeleteDirectory(string path)
     {
-        foreach (var file in _files.GetFilesAt(path))
+        foreach (var file in _workingFiles.GetFilesAt(path))
         {
             Log.Info(FilesModule.Prefix, $"Deleted file {file}");
-            _files.DeleteFile(file);
+            _workingFiles.DeleteFile(file);
         }
 
         Log.Info(FilesModule.Prefix, $"Deleted directory {path}");
-        _files.DeleteDirectory(path, true);
+        _workingFiles.DeleteDirectory(path, true);
     }
 
     [LuaMember("delete")]
     public void DeleteFile(string path)
     {
         Log.Info(FilesModule.Prefix, $"Deleted file {path}");
-        _files.DeleteFile(path);
+        _workingFiles.DeleteFile(path);
     }
 
     [LuaMember("copy")]
     public void CopyFile(string sourcePath, string destinationPath)
     {
-        var sourceIsFile = _files.HasFile(sourcePath);
-        var destinationIsFile = _files.HasFile(destinationPath);
+        var sourceIsFile = _workingFiles.HasFile(sourcePath);
+        var destinationIsFile = _workingFiles.HasFile(destinationPath);
 
         if (sourceIsFile && destinationIsFile)
         {
-            var content = _files.ReadBytes(sourcePath);
-            _files.CreateOrOverwriteFile(destinationPath);
+            var content = _workingFiles.ReadBytes(sourcePath);
+            _workingFiles.CreateOrOverwriteFile(destinationPath);
 
             Log.Info(FilesModule.Prefix, $"Copying file {sourcePath} to file {destinationPath}");
-            _files.WriteToFileBytes(destinationPath, content);
+            _workingFiles.WriteToFileBytes(destinationPath, content);
         }
 
         if (sourceIsFile && !destinationIsFile)
         {
-            var newFileSystem = _files.CreateDirectory(destinationPath);
-            var content = _files.ReadBytes(sourcePath);
+            var newFileSystem = _workingFiles.CreateDirectory(destinationPath);
+            var content = _workingFiles.ReadBytes(sourcePath);
             var fileName = Path.GetFileName(sourcePath);
 
             Log.Info(FilesModule.Prefix, $"Copying file {sourcePath} to directory {destinationPath}");
@@ -110,8 +125,8 @@ public class FilesModule
 
         if (!sourceIsFile && !destinationIsFile)
         {
-            var sourceDirectory = _files.GetDirectory(sourcePath);
-            var destinationDirectory = _files.GetDirectory(destinationPath);
+            var sourceDirectory = _workingFiles.GetDirectory(sourcePath);
+            var destinationDirectory = _workingFiles.GetDirectory(destinationPath);
 
             sourceDirectory.CreateDirectory();
             destinationDirectory.CreateDirectory();

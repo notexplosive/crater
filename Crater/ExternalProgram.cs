@@ -6,17 +6,19 @@ namespace Crater.ExternalPrograms;
 public class ProgramOutput
 {
     public readonly bool WasSuccessful;
-    public string[] Output { get; }
 
     public ProgramOutput(bool wasSuccessful, string[] output)
     {
         WasSuccessful = wasSuccessful;
         Output = output;
     }
+
+    public string[] Output { get; }
 }
 
 public class ExternalProgram
 {
+    public const string Prefix = "💻";
     private readonly string _runPath;
 
     public ExternalProgram(string runPath)
@@ -24,11 +26,14 @@ public class ExternalProgram
         _runPath = runPath;
     }
 
+    public bool SuppressLogging { get; set; }
+
     public ProgramOutput RunWithArgs(params string[] argumentList)
     {
         var workingDirectory = Directory.GetCurrentDirectory();
 
-            Log.Info("💻", _runPath + (argumentList.Length > 0 ? " " : "") + string.Join(" ", argumentList));
+        Log.Info(ExternalProgram.Prefix,
+            (SuppressLogging ? "[Silent] " : "") + _runPath + (argumentList.Length > 0 ? " " : "") + string.Join(" ", argumentList));
 
         var wasSuccessful = true;
         var totalOutput = new List<string>();
@@ -39,12 +44,15 @@ public class ExternalProgram
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
 
-            
             process.OutputDataReceived += (sender, found) =>
             {
                 if (!string.IsNullOrEmpty(found.Data))
                 {
-                    Console.WriteLine(found.Data);
+                    if (!SuppressLogging)
+                    {
+                        Console.WriteLine(found.Data);
+                    }
+
                     totalOutput.Add(found.Data);
                 }
             };
@@ -53,10 +61,11 @@ public class ExternalProgram
             {
                 process.StartInfo.ArgumentList.Add(argument);
             }
+
             try
             {
                 process.Start();
-                
+
                 process.BeginOutputReadLine();
 
                 process.WaitForExit();

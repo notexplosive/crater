@@ -14,6 +14,11 @@ public static class Log
         Console.WriteLine($"{Log.SeverityCharacter(Severity.Info)}{prefix} {message}");
     }
 
+    public static void Warning(string prefix, string message)
+    {
+        Console.WriteLine($"{Log.SeverityCharacter(Severity.Warning)}{prefix} {message}");
+    }
+
     public static void FromLua(Severity severity, params object[] objects)
     {
         Console.WriteLine($"{Log.SeverityCharacter(severity)}💬 {string.Join(" ", objects)}");
@@ -34,9 +39,8 @@ public static class Log
         }
     }
 
-    public static void Error(string message)
+    public static void Error(string prefix,string message)
     {
-        // error symbol twice
-        Console.WriteLine($"{Log.SeverityCharacter(Severity.Error)}{Log.SeverityCharacter(Severity.Error)} {message}");
+        Console.WriteLine($"{prefix}{Log.SeverityCharacter(Severity.Error)} {message}");
     }
 }
