@@ -1,0 +1,4 @@
+print("-- DEPLOY PHASE 1 -- ")
+local outputDirectory = args[1] or ".build"
+
+dotnet.publish(".", outputDirectory)
