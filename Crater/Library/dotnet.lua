@@ -1,7 +1,9 @@
-local dotnet = {}
+local dotnet = {
+    description = "dotnet utilities"
+}
 
 function dotnet.publish(csprojPath, absoluteOutputPath)
-    program.run("dotnet",
+    program.runSilent("dotnet",
             { "publish", csprojPath,
               "-c", "Release",
               "-r", "win-x64",

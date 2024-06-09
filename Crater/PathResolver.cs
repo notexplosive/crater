@@ -15,21 +15,7 @@ public class PathResolver
     public RealFileSystem LocalFiles { get; } = new(AppDomain.CurrentDomain.BaseDirectory);
     public RealFileSystem WorkingFiles { get; } = new(Directory.GetCurrentDirectory());
 
-    private string? CheckPath(RealFileSystem files, string path)
-    {
-        if (files.HasFile(path))
-        {
-            return files.ToAbsolutePath(path);
-        }
-
-        return
-            PathResolver.CheckIndividual(files, path)
-            ?? PathResolver.CheckIndividual(files, path + ".crater")
-            ?? PathResolver.CheckIndividual(files, path + ".lua")
-            ;
-    }
-
-    private static string? CheckIndividual(RealFileSystem files, string pathWithExtension)
+    private static string? GetPathIfExists(RealFileSystem files, string pathWithExtension)
     {
         if (files.HasFile(pathWithExtension))
         {
@@ -39,11 +25,25 @@ public class PathResolver
         return null;
     }
 
-    public string? Deduce(string path)
+    private string? ResolveExtension(RealFileSystem files, string path)
     {
-        var working = CheckPath(WorkingFiles, path);
-        var local = CheckPath(LocalScripts, path);
+        if (files.HasFile(path))
+        {
+            return files.ToAbsolutePath(path);
+        }
 
-        return working ?? local;
+        return
+            PathResolver.GetPathIfExists(files, path)
+            ?? PathResolver.GetPathIfExists(files, path + ".crater")
+            ?? PathResolver.GetPathIfExists(files, path + ".lua")
+            ;
+    }
+
+    public string? Resolve(string path)
+    {
+        return
+            ResolveExtension(WorkingFiles, path)
+            ?? ResolveExtension(LocalScripts, path)
+            ;
     }
 }

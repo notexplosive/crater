@@ -7,7 +7,11 @@ namespace Crater;
 [LuaBoundType]
 public class FilesModule
 {
-    private const string Prefix = "📂";
+    private const string FolderPrefix = "📂";
+    private const string FilePrefix = "📄";
+    private const string WritePrefix = "📝";
+    private const string ReadPrefix = "📖";
+    private const string DeletePrefix = "🔥";
     private readonly RealFileSystem _workingFiles;
     private readonly RealFileSystem _localFiles;
     private readonly LuaRuntime _luaRuntime;
@@ -41,28 +45,28 @@ public class FilesModule
     [LuaMember("write")]
     public void Write(string path, string content)
     {
-        Log.Info(FilesModule.Prefix, $"Writing to file {path}");
+        Log.Info(FilesModule.WritePrefix, $"Writing to file {path}");
         _workingFiles.WriteToFile(path, content.SplitLines());
     }
 
     [LuaMember("createOrOverwrite")]
     public void CreateOrOverwrite(string path)
     {
-        Log.Info(FilesModule.Prefix, $"Overwrite/Create file {path}");
+        Log.Info(FilesModule.FilePrefix, $"Overwrite/Create file {path}");
         _workingFiles.CreateOrOverwriteFile(path);
     }
 
     [LuaMember("create")]
     public void Create(string path)
     {
-        Log.Info(FilesModule.Prefix, $"Created file {path}");
+        Log.Info(FilesModule.FilePrefix, $"Created file {path}");
         _workingFiles.CreateFile(path);
     }
 
     [LuaMember("createDirectory")]
     public void CreateDirectory(string path)
     {
-        Log.Info(FilesModule.Prefix, $"Created directory {path}");
+        Log.Info(FilesModule.FolderPrefix, $"Created directory {path}");
         _workingFiles.GetDirectory(path).CreateDirectory();
     }
 
@@ -83,18 +87,18 @@ public class FilesModule
     {
         foreach (var file in _workingFiles.GetFilesAt(path))
         {
-            Log.Info(FilesModule.Prefix, $"Deleted file {file}");
+            Log.Info(FilesModule.DeletePrefix, $"Deleted file {file}");
             _workingFiles.DeleteFile(file);
         }
 
-        Log.Info(FilesModule.Prefix, $"Deleted directory {path}");
+        Log.Info(FilesModule.DeletePrefix, $"Deleted directory {path}");
         _workingFiles.DeleteDirectory(path, true);
     }
 
     [LuaMember("delete")]
     public void DeleteFile(string path)
     {
-        Log.Info(FilesModule.Prefix, $"Deleted file {path}");
+        Log.Info(FilesModule.DeletePrefix, $"Deleted file {path}");
         _workingFiles.DeleteFile(path);
     }
 
@@ -109,7 +113,7 @@ public class FilesModule
             var content = _workingFiles.ReadBytes(sourcePath);
             _workingFiles.CreateOrOverwriteFile(destinationPath);
 
-            Log.Info(FilesModule.Prefix, $"Copying file {sourcePath} to file {destinationPath}");
+            Log.Info(FilesModule.FilePrefix, $"Copying file {sourcePath} to file {destinationPath}");
             _workingFiles.WriteToFileBytes(destinationPath, content);
         }
 
@@ -119,7 +123,7 @@ public class FilesModule
             var content = _workingFiles.ReadBytes(sourcePath);
             var fileName = Path.GetFileName(sourcePath);
 
-            Log.Info(FilesModule.Prefix, $"Copying file {sourcePath} to directory {destinationPath}");
+            Log.Info(FilesModule.FilePrefix, $"Copying file {sourcePath} to directory {destinationPath}");
             newFileSystem.WriteToFileBytes(fileName, content);
         }
 
@@ -133,7 +137,7 @@ public class FilesModule
 
             foreach (var sourceItemRelativePath in sourceDirectory.GetFilesAt("."))
             {
-                Log.Info(FilesModule.Prefix, $"Copying file {sourceItemRelativePath} to directory {destinationPath}");
+                Log.Info(FilesModule.FilePrefix, $"Copying file {sourceItemRelativePath} to directory {destinationPath}");
                 var sourceItemContent = sourceDirectory.ReadBytes(sourceItemRelativePath);
                 destinationDirectory.WriteToFileBytes(sourceItemRelativePath, sourceItemContent);
             }

@@ -1,4 +1,6 @@
-local table_util = {}
+local table_util = {
+    description = "table utilities to amend standard library"
+}
 
 function table_util.contains(list, target)
     for i, element in ipairs(list) do

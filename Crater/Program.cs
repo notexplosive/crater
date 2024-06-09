@@ -26,7 +26,7 @@ if (args.Length > 0)
     var givenPath = args[0];
     argsList.RemoveAt(0);
 
-    var finalPath = paths.Deduce(givenPath);
+    var finalPath = paths.Resolve(givenPath);
 
     if (finalPath == null)
     {
@@ -65,6 +65,6 @@ if (args.Length > 0)
     {
         Log.FromLua(Log.Severity.Error, luaRuntime.CurrentError.Exception.Message);
         var callstack = luaRuntime.Callstack();
-        Log.FromLua(Log.Severity.Error, callstack);
+        Log.Info(Log.CorePrefix, callstack);
     }
 }

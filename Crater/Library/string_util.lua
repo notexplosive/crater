@@ -1,4 +1,6 @@
-﻿local string_util = {}
+﻿local string_util = {
+    description = "string utilities to amend standard library"
+}
 
 function string_util.split(inputstr, sep)
     assert(sep, "seperator is nil")

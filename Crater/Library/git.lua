@@ -1,4 +1,6 @@
-﻿local git = {}
+﻿local git = {
+    description = "git utilities"
+}
 
 function git.hasRemote()
     local success, output = program.runSilent("git", { "remote" })

@@ -1,6 +1,8 @@
 local string_util = lib("string_util")
 
-local version = {}
+local version = {
+    description = "utilities for parsing/modifying Semantic Version style strings"
+}
 
 function version.isValid(versionString)
     local split = string_util.split(versionString, ".")

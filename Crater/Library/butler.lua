@@ -1,5 +1,7 @@
 local version = lib("version")
-local butler = {}
+local butler = {
+    description = "itch.io butler utility"
+}
 
 function butler.login()
     program.run("butler", { "login" })

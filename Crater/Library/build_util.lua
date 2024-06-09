@@ -1,4 +1,6 @@
-﻿local build_helpers = {}
+﻿local build_helpers = {
+    description = "utilities to help with building projects"
+}
 
 function build_helpers.removeDebugSymbols(directory)
     for _, file in ipairs(files.list(directory, true, "pdb")) do

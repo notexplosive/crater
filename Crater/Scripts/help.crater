@@ -1,0 +1,22 @@
+﻿if #args == 0 then
+    print("usage: help {lib_name}")
+    print("example: crater help butler")
+else
+    local libName = args[1]
+    local foundLib = lib(libName)
+
+    if foundLib == nil then
+        error("unknown lib " .. libName)
+    end
+
+    if foundLib.description then
+        print("description: " .. foundLib.description)
+    end
+
+    print("functions:")
+    for key, val in pairs(foundLib) do
+        if type(val) == "function" then
+            print("   " .. key)
+        end
+    end
+end 
