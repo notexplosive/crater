@@ -15,7 +15,7 @@ public class PathResolver
     public RealFileSystem LocalFiles { get; } = new(AppDomain.CurrentDomain.BaseDirectory);
     public RealFileSystem WorkingFiles { get; } = new(Directory.GetCurrentDirectory());
 
-    private static string? GetPathIfExists(RealFileSystem files, string pathWithExtension)
+    private static string? GetPathIfFileExists(RealFileSystem files, string pathWithExtension)
     {
         if (files.HasFile(pathWithExtension))
         {
@@ -33,9 +33,9 @@ public class PathResolver
         }
 
         return
-            PathResolver.GetPathIfExists(files, path)
-            ?? PathResolver.GetPathIfExists(files, path + ".crater")
-            ?? PathResolver.GetPathIfExists(files, path + ".lua")
+            PathResolver.GetPathIfFileExists(files, path)
+            ?? PathResolver.GetPathIfFileExists(files, path + ".crater")
+            ?? PathResolver.GetPathIfFileExists(files, path + ".lua")
             ;
     }
 

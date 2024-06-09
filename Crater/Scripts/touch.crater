@@ -1,0 +1,3 @@
+﻿assert(args[1], "missing filename")
+
+files.create(args[1])
