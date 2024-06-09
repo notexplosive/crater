@@ -1,1 +1,7 @@
-﻿
+﻿local build_helpers = lib("build_helpers")
+local string_util = lib("string_util")
+local version = lib("version")
+
+print(version.bumpPatch("1.2.2"))
+print(version.bumpMinor("1.2.2"))
+print(version.bumpMajor("1.2.2"))

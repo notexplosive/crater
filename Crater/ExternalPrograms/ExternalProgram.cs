@@ -6,17 +6,13 @@ namespace Crater.ExternalPrograms;
 public class ProgramOutput
 {
     public readonly bool WasSuccessful;
+    public string[] Output { get; }
 
-    public ProgramOutput(bool wasSuccessful)
+    public ProgramOutput(bool wasSuccessful, string[] output)
     {
         WasSuccessful = wasSuccessful;
+        Output = output;
     }
-}
-
-public enum ProgramOutputLevel
-{
-    AllowProgramToEmitToConsole,
-    SuppressProgramFromEmittingToConsole
 }
 
 public class ExternalProgram
@@ -28,43 +24,40 @@ public class ExternalProgram
         _runPath = runPath;
     }
 
-    public ProgramOutput RunWithArgs(ProgramOutputLevel outputLevel, params string[] argumentList)
+    public ProgramOutput RunWithArgs(params string[] argumentList)
     {
         var workingDirectory = Directory.GetCurrentDirectory();
 
-        if (outputLevel == ProgramOutputLevel.AllowProgramToEmitToConsole)
-        {
             Log.Info("💻", _runPath + (argumentList.Length > 0 ? " " : "") + string.Join(" ", argumentList));
-        }
 
         var wasSuccessful = true;
+        var totalOutput = new List<string>();
         using (var process = new Process())
         {
             process.StartInfo.WorkingDirectory = workingDirectory;
             process.StartInfo.FileName = _runPath;
             process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
 
-            if (outputLevel == ProgramOutputLevel.SuppressProgramFromEmittingToConsole)
+            
+            process.OutputDataReceived += (sender, found) =>
             {
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-            }
+                if (!string.IsNullOrEmpty(found.Data))
+                {
+                    Console.WriteLine(found.Data);
+                    totalOutput.Add(found.Data);
+                }
+            };
 
             foreach (var argument in argumentList)
             {
                 process.StartInfo.ArgumentList.Add(argument);
             }
-
             try
             {
                 process.Start();
-
-                if (outputLevel == ProgramOutputLevel.SuppressProgramFromEmittingToConsole)
-                {
-                    // Flush the buffers
-                    process.StandardOutput.ReadToEnd();
-                    process.StandardError.ReadToEnd();
-                }
+                
+                process.BeginOutputReadLine();
 
                 process.WaitForExit();
             }
@@ -74,11 +67,6 @@ public class ExternalProgram
             }
         }
 
-        return new ProgramOutput(wasSuccessful);
-    }
-
-    private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-    {
-        Console.Write(e.Data);
+        return new ProgramOutput(wasSuccessful, totalOutput.ToArray());
     }
 }

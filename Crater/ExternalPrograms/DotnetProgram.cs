@@ -12,7 +12,7 @@
         /// <returns></returns>
         public ProgramOutput NormalPublish(string csprojPath, string absoluteOutputPath)
         {
-            return RunWithArgs(ProgramOutputLevel.AllowProgramToEmitToConsole,
+            return RunWithArgs(
                         "publish",
                         csprojPath,
                         "-c", "Release",
@@ -25,22 +25,7 @@
 
         public ProgramOutput Version()
         {
-            return RunWithArgs(ProgramOutputLevel.AllowProgramToEmitToConsole, "--version");
-        }
-
-        public bool Exists()
-        {
-            return RunWithArgs(ProgramOutputLevel.SuppressProgramFromEmittingToConsole, "--version").WasSuccessful;
-        }
-
-        public void AddToSln(ProgramOutputLevel outputLevel, string path)
-        {
-            RunWithArgs(outputLevel, "sln", "add", path);
-        }
-
-        public void NewSln(ProgramOutputLevel outputLevel)
-        {
-            RunWithArgs(outputLevel, "new", "sln");
+            return RunWithArgs("--version");
         }
     }
 }

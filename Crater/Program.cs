@@ -11,11 +11,13 @@ var argsList = args.ToList();
 
 var localFiles = new RealFileSystem(AppDomain.CurrentDomain.BaseDirectory);
 var workingFiles = new RealFileSystem(Directory.GetCurrentDirectory());
-var appData = new RealFileSystem(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+var appDataFiles = new RealFileSystem(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
     "NotExplosive", Assembly.GetEntryAssembly()!.GetName().Name));
+var libraryFiles = localFiles.GetDirectory("Library");
 
 var corePrefix = "🌙";
 
+Dictionary<string, DynValue> libraryCache = new();
 if (args.Length > 0)
 {
     var filePath = args[0];
@@ -38,6 +40,17 @@ if (args.Length > 0)
     luaRuntime.SetGlobal("args", argsTable);
     luaRuntime.SetGlobal("files", new FilesModule(luaRuntime, workingFiles));
     luaRuntime.SetGlobal("dotnet", new DotnetModule(workingFiles));
+    luaRuntime.SetGlobal("program", new ProgramModule(luaRuntime));
+    luaRuntime.SetGlobal("lib", (string path) =>
+    {
+        var libraryId = path + ".lua";
+        if (!libraryCache.ContainsKey(libraryId))
+        {
+            libraryCache[libraryId] = luaRuntime.Run(libraryFiles.ReadFile(libraryId), path);
+        }
+        
+        return libraryCache[libraryId];
+    });
 
     luaRuntime.MessageLogged += items => Log.FromLua(Log.Severity.Info, items);
     luaRuntime.Run(content, filePath);
@@ -53,5 +66,10 @@ if (args.Length > 0)
 }
 else
 {
-    Log.Info(corePrefix, "Hello!");
+    var version = localFiles.ReadFile("VERSION").Trim();
+
+    if (!string.IsNullOrEmpty(version))
+    {
+        Log.Info(corePrefix, "Crater Version: " + version);
+    }
 }
