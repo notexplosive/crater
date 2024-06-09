@@ -52,7 +52,7 @@ public class FilesModule
     [LuaMember("createOrOverwrite")]
     public void CreateOrOverwrite(string path)
     {
-        Log.Info(FilesModule.FilePrefix, $"Overwrite/Create file {path}");
+        Log.Info(FilesModule.FilePrefix, $"Overwriting/Creating file {path}");
         _workingFiles.CreateOrOverwriteFile(path);
     }
 
@@ -87,18 +87,18 @@ public class FilesModule
     {
         foreach (var file in _workingFiles.GetFilesAt(path))
         {
-            Log.Info(FilesModule.DeletePrefix, $"Deleted file {file}");
+            Log.Info(FilesModule.DeletePrefix, $"Deleting file {file}");
             _workingFiles.DeleteFile(file);
         }
 
-        Log.Info(FilesModule.DeletePrefix, $"Deleted directory {path}");
+        Log.Info(FilesModule.DeletePrefix, $"Deleting directory {path}");
         _workingFiles.DeleteDirectory(path, true);
     }
 
     [LuaMember("delete")]
     public void DeleteFile(string path)
     {
-        Log.Info(FilesModule.DeletePrefix, $"Deleted file {path}");
+        Log.Info(FilesModule.DeletePrefix, $"Deleting file {path}");
         _workingFiles.DeleteFile(path);
     }
 

@@ -1,3 +1,3 @@
-﻿program.run("git", { "add", "." })
-program.run("git", { "commit", "-m", args[1] or "Lazy auto commit" })
-program.run("git", { "push" })
+﻿assert(program.runSilent("git", { "add", "." }))
+assert(program.runSilent("git", { "commit", "-m", args[1] or "Lazy auto commit" }))
+assert(program.runSilent("git", { "push" }))
