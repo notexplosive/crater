@@ -9,6 +9,8 @@ public static class Log
         Error
     }
 
+    public const string CorePrefix = "🌙";
+
     public static void Info(string prefix, string message)
     {
         Console.WriteLine($"{Log.SeverityCharacter(Severity.Info)}{prefix} {message}");
@@ -39,8 +41,8 @@ public static class Log
         }
     }
 
-    public static void Error(string prefix,string message)
+    public static void Error(string prefix, string message)
     {
-        Console.WriteLine($"{prefix}{Log.SeverityCharacter(Severity.Error)} {message}");
+        Console.WriteLine($"{Log.SeverityCharacter(Severity.Error)}{prefix} {message}");
     }
 }

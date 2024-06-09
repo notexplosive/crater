@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Crater;
-using ExplogineCore;
 using ExplogineCore.Lua;
 using MoonSharp.Interpreter;
 
@@ -8,40 +7,35 @@ Console.OutputEncoding = Encoding.UTF8;
 
 var argsList = args.ToList();
 
-var localFiles = new RealFileSystem(AppDomain.CurrentDomain.BaseDirectory);
-var workingFiles = new RealFileSystem(Directory.GetCurrentDirectory());
-var libraryFiles = localFiles.GetDirectory("Library");
+var paths = new PathResolver();
 
-var corePrefix = "🌙";
-
-var version = localFiles.ReadFile("VERSION").Trim();
+var version = paths.LocalFiles.ReadFile("VERSION").Trim();
 
 if (!string.IsNullOrEmpty(version))
 {
-    Log.Info(corePrefix, "Crater Version: " + version);
+    Log.Info(Log.CorePrefix, "Crater Version: " + version);
 }
 else
 {
-    Log.Warning(corePrefix, "Unknown version, missing VERSION file");
+    Log.Warning(Log.CorePrefix, "Unknown version, missing VERSION file");
 }
 
 Dictionary<string, DynValue> libraryCache = new();
 if (args.Length > 0)
 {
-    var filePath = args[0];
+    var givenPath = args[0];
     argsList.RemoveAt(0);
 
-    if (!workingFiles.HasFile(filePath))
+    var finalPath = paths.Deduce(givenPath);
+
+    if (finalPath == null)
     {
-        Log.Error(corePrefix, $"File not found {filePath}");
-    }
-    else
-    {
-        Log.Info(corePrefix, $"Running {filePath}");
+        Log.Error(Log.CorePrefix, $"File not found {givenPath}");
     }
 
-    var content = workingFiles.ReadFile(filePath);
-    var luaRuntime = new LuaRuntime(workingFiles);
+    Log.Info(Log.CorePrefix, $"Running {finalPath}");
+    var content = paths.WorkingFiles.ReadFile(finalPath);
+    var luaRuntime = new LuaRuntime(paths.WorkingFiles);
 
     var argsTable = luaRuntime.NewTable();
     foreach (var arg in argsList)
@@ -50,21 +44,21 @@ if (args.Length > 0)
     }
 
     luaRuntime.SetGlobal("args", argsTable);
-    luaRuntime.SetGlobal("files", new FilesModule(luaRuntime, workingFiles, localFiles));
+    luaRuntime.SetGlobal("files", new FilesModule(luaRuntime, paths.WorkingFiles, paths.LocalFiles));
     luaRuntime.SetGlobal("program", new ProgramModule(luaRuntime));
     luaRuntime.SetGlobal("lib", (string path) =>
     {
         var libraryId = path + ".lua";
         if (!libraryCache.ContainsKey(libraryId))
         {
-            libraryCache[libraryId] = luaRuntime.Run(libraryFiles.ReadFile(libraryId), $"lib/{path}");
+            libraryCache[libraryId] = luaRuntime.Run(paths.LocalLibrary.ReadFile(libraryId), $"lib/{path}");
         }
 
         return libraryCache[libraryId];
     });
 
     luaRuntime.MessageLogged += items => Log.FromLua(Log.Severity.Info, items);
-    luaRuntime.Run(content, filePath);
+    luaRuntime.Run(content, givenPath);
 
     if (luaRuntime.CurrentError != null)
     {

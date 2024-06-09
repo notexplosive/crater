@@ -2,13 +2,30 @@
 local dotnet = lib("dotnet")
 local butler = lib("butler")
 local git = lib("git")
+local table_util = lib("table_util")
 
-local outputDirectory = args[1] or ".build"
+local outputDirectory = ".build"
+
+-- forward slashes so it's easier to compare
+local productionPath = "D:/Crater"
+
+if string.match(files.localDirectory(), productionPath) then
+    error("You're running deploy from production, this will not work because crater will have to delete itself in the process")
+end
+
+
+local isLocal = table_util.contains(args, "--local")
+
+if isLocal then
+    print("LOCAL ONLY")
+end
 
 print("Copying library to local path")
 files.copy("Library", files.localDirectory() .. "/Library")
 
-assert(git.isWorkspaceClean(), "You have uncommitted changes")
+if not isLocal then
+    assert(git.isWorkspaceClean(), "You have uncommitted changes")
+end
 
 print("Publishing")
 dotnet.publish(".", outputDirectory)
@@ -22,10 +39,10 @@ files.write("VERSION", newVersion)
 print("Copying Version File")
 files.copy("VERSION", outputDirectory)
 
-print("Uploading to itch")
-butler.push(outputDirectory, "notexplosive", "crater", "windows")
-
-local productionPath = "D:\\Crater"
+if not isLocal then
+    print("Uploading to itch")
+    butler.push(outputDirectory, "notexplosive", "crater", "windows")
+end
 
 print("Deleting old production instance")
 files.deleteDirectory(productionPath)
@@ -33,5 +50,8 @@ files.deleteDirectory(productionPath)
 print("Copying new instance to production")
 files.copy(".build", productionPath)
 
-print("Copying new Library")
+print("Copying new Library to production")
 files.copy("Library", productionPath .. "/Library")
+
+print("Copying new Scripts to production")
+files.copy("Scripts", productionPath .. "/Scripts")

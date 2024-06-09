@@ -1,0 +1,1 @@
+﻿print(args[1] or "")
