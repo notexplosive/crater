@@ -31,6 +31,7 @@ if (args.Length > 0)
     if (finalPath == null)
     {
         Log.Error(Log.CorePrefix, $"File not found {givenPath}");
+        return;
     }
 
     Log.Info(Log.CorePrefix, $"Running {finalPath}");
