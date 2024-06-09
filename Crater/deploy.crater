@@ -1,11 +1,14 @@
 ﻿local version = lib("version")
 local dotnet = lib("dotnet")
 local butler = lib("butler")
+local git = lib("git")
 
 local outputDirectory = args[1] or ".build"
 
 print("Copying library to local path")
 files.copy("Library", files.localDirectory() .. "/Library")
+
+assert(git.isWorkspaceClean(), "You have uncommitted changes")
 
 print("Publishing")
 dotnet.publish(".", outputDirectory)
