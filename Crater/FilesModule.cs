@@ -10,8 +10,8 @@ public class FilesModule
     private const string FolderPrefix = "📂";
     private const string FilePrefix = "📄";
     private const string WritePrefix = "📝";
-    private const string ReadPrefix = "📖";
-    private const string DeletePrefix = "🔥";
+    private const string CopyPrefix = "🔄";
+    private const string DeletePrefix = "💥";
     private readonly RealFileSystem _workingFiles;
     private readonly RealFileSystem _localFiles;
     private readonly LuaRuntime _luaRuntime;
@@ -113,7 +113,7 @@ public class FilesModule
             var content = _workingFiles.ReadBytes(sourcePath);
             _workingFiles.CreateOrOverwriteFile(destinationPath);
 
-            Log.Info(FilesModule.FilePrefix, $"Copying file {sourcePath} to file {destinationPath}");
+            Log.Info(FilesModule.CopyPrefix, $"Copying file {sourcePath} to file {destinationPath}");
             _workingFiles.WriteToFileBytes(destinationPath, content);
         }
 
@@ -123,7 +123,7 @@ public class FilesModule
             var content = _workingFiles.ReadBytes(sourcePath);
             var fileName = Path.GetFileName(sourcePath);
 
-            Log.Info(FilesModule.FilePrefix, $"Copying file {sourcePath} to directory {destinationPath}");
+            Log.Info(FilesModule.CopyPrefix, $"Copying file {sourcePath} to directory {destinationPath}");
             newFileSystem.WriteToFileBytes(fileName, content);
         }
 
@@ -137,7 +137,7 @@ public class FilesModule
 
             foreach (var sourceItemRelativePath in sourceDirectory.GetFilesAt("."))
             {
-                Log.Info(FilesModule.FilePrefix, $"Copying file {sourceItemRelativePath} to directory {destinationPath}");
+                Log.Info(FilesModule.CopyPrefix, $"Copying file {sourceItemRelativePath} to directory {destinationPath}");
                 var sourceItemContent = sourceDirectory.ReadBytes(sourceItemRelativePath);
                 destinationDirectory.WriteToFileBytes(sourceItemRelativePath, sourceItemContent);
             }

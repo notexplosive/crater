@@ -17,7 +17,9 @@ if (!string.IsNullOrEmpty(version))
 }
 else
 {
+#if !DEBUG
     Log.Warning(Log.CorePrefix, "Unknown version, missing VERSION file");
+#endif
 }
 
 Dictionary<string, DynValue> libraryCache = new();

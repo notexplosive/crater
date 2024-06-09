@@ -23,9 +23,11 @@ public static class Log
 
     public static void FromLua(Severity severity, params object[] objects)
     {
-        Console.WriteLine($"{Log.SeverityCharacter(severity)}💬 {string.Join(" ", objects)}");
+        Console.WriteLine($"{Log.SeverityCharacter(severity)}{LuaPrefix} {string.Join(" ", objects)}");
     }
 
+    private const string LuaPrefix = "🐲";
+    
     private static string SeverityCharacter(Severity severity)
     {
         switch (severity)
