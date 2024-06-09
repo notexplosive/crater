@@ -55,3 +55,7 @@ files.copy("Library", productionPath .. "/Library")
 
 print("Copying new Scripts to production")
 files.copy("Scripts", productionPath .. "/Scripts")
+
+if not isLocal then
+    program.run("crater", {"commit_and_push", "Bump Version"})
+end 

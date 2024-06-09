@@ -1,3 +1,0 @@
-﻿program.run("git", { "add", "." })
-program.run("git", { "commit", "-m", "Lazy auto commit" })
-program.run("git", { "push" })
