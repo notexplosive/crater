@@ -1,0 +1,27 @@
+-- clean up from previous runs
+files.deleteDirectory("bucket_1")
+files.deleteDirectory("bucket_2")
+files.deleteDirectory("bucket_3")
+files.deleteDirectory("bucket_4")
+
+-- initial setup
+files.createDirectory("bucket_1")
+files.createDirectory("bucket_2")
+files.createDirectory("bucket_3")
+files.write("bucket_1/water", "water")
+files.write("bucket_1/oil", "oil")
+files.write("bucket_2/sand", "sand")
+files.write("bucket_2/gravel", "gravel from bucket_2")
+files.write("bucket_3/gravel", "gravel from bucket_3")
+
+print("file to folder")
+files.copy("bucket_1/oil", "bucket_3")
+
+print("file to nonexistant directory")
+files.copy("bucket_1/water", "bucket_3/flask")
+
+print("folder to folder")
+files.copy("bucket_2", "bucket_3")
+
+print("folder to new folder")
+files.copy("bucket_3", "bucket_4")

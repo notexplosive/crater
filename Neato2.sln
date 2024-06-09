@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExTween", "explogine\Te
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Assets", "Assets\Assets.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neato2", "Neato2\Neato2.csproj", "{1E6DC5BF-D7F8-4FAF-A791-FFB007C4023D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeatoApp", "NeatoApp\NeatoApp.csproj", "{1B64B263-91D8-4183-A3A1-9DB87417BBED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,10 +64,10 @@ Global
 		{DA09B420-9E13-40E7-921C-ED02C143A2B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA09B420-9E13-40E7-921C-ED02C143A2B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA09B420-9E13-40E7-921C-ED02C143A2B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E6DC5BF-D7F8-4FAF-A791-FFB007C4023D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E6DC5BF-D7F8-4FAF-A791-FFB007C4023D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E6DC5BF-D7F8-4FAF-A791-FFB007C4023D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E6DC5BF-D7F8-4FAF-A791-FFB007C4023D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B64B263-91D8-4183-A3A1-9DB87417BBED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B64B263-91D8-4183-A3A1-9DB87417BBED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B64B263-91D8-4183-A3A1-9DB87417BBED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B64B263-91D8-4183-A3A1-9DB87417BBED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B91377D3-0DFD-4684-B6EC-5B648767A985} = {2AAC9F48-EAE0-4DF3-A649-712824C3E893}
