@@ -2,6 +2,14 @@ local string_util = lib("string_util")
 
 local version = {}
 
+function version.isValid(versionString)
+    local split = string_util.split(versionString, ".")
+    return #split == 3 
+            and tonumber(split[1]) ~= nil
+            and tonumber(split[2]) ~= nil
+            and tonumber(split[3]) ~= nil
+end
+
 function version.bumpPatch(versionString)
     local split = string_util.split(versionString, ".")
     split[3] = tonumber(split[3]) + 1

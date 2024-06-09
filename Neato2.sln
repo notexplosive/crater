@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExplogineCoreTests", "explo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExTween", "explogine\Tests\TestExTween\TestExTween.csproj", "{DA09B420-9E13-40E7-921C-ED02C143A2B5}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Assets", "Assets\Assets.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crater", "Crater\Crater.csproj", "{1B64B263-91D8-4183-A3A1-9DB87417BBED}"
 EndProject
 Global

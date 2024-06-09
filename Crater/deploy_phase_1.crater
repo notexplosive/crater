@@ -1,4 +1,6 @@
 local version = lib("version")
+local dotnet = lib("dotnet")
+local butler = lib("butler")
 
 print("-- DEPLOY PHASE 1 -- ")
 local outputDirectory = args[1] or ".build"
@@ -14,3 +16,6 @@ files.write("VERSION", newVersion)
 
 print("Copying Version File")
 files.copy("VERSION", outputDirectory)
+
+print("Uploading to itch")
+butler.push(outputDirectory, "notexplosive", "crater", "windows")

@@ -39,16 +39,15 @@ if (args.Length > 0)
 
     luaRuntime.SetGlobal("args", argsTable);
     luaRuntime.SetGlobal("files", new FilesModule(luaRuntime, workingFiles));
-    luaRuntime.SetGlobal("dotnet", new DotnetModule(workingFiles));
     luaRuntime.SetGlobal("program", new ProgramModule(luaRuntime));
     luaRuntime.SetGlobal("lib", (string path) =>
     {
         var libraryId = path + ".lua";
         if (!libraryCache.ContainsKey(libraryId))
         {
-            libraryCache[libraryId] = luaRuntime.Run(libraryFiles.ReadFile(libraryId), path);
+            libraryCache[libraryId] = luaRuntime.Run(libraryFiles.ReadFile(libraryId), $"lib/{path}");
         }
-        
+
         return libraryCache[libraryId];
     });
 
