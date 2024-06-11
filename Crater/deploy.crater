@@ -7,24 +7,22 @@ local table_util = lib("table_util")
 local outputDirectory = ".build"
 
 -- forward slashes so it's easier to compare
-local productionPath = "D:/Crater"
+local productionPath = "~/Crater"
+
+print("Copying library to local path")
+files.copy("Library", files.localDirectory() .. "Library")
 
 if string.match(files.localDirectory(), productionPath) then
-    error("You're running deploy from production, this will not work because crater will have to delete itself in the process")
+    error(
+        "You're running deploy from production, this will not work because crater will have to delete itself in the process")
 end
 
+assert(table_util, "You didn't have a Library before this run. Please run again")
 
 local isLocal = table_util.contains(args, "--local")
 
 if isLocal then
     print("LOCAL ONLY")
-end
-
-print("Copying library to local path")
-files.copy("Library", files.localDirectory() .. "/Library")
-
-if not isLocal then
-    assert(git.isWorkspaceClean(), "You have uncommitted changes")
 end
 
 print("Publishing")
@@ -57,5 +55,5 @@ print("Copying new Scripts to production")
 files.copy("Scripts", productionPath .. "/Scripts")
 
 if not isLocal then
-    program.run("crater", {"commit_and_push", "Bump version after deploy"})
-end 
+    program.run("crater", { "commit_and_push", "Bump version after deploy" })
+end
