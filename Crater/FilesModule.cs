@@ -40,7 +40,8 @@ public class FilesModule
     [LuaMember("homeDirectory")]
     public string HomeDirectory()
     {
-        return _homeFiles.FullNormalizedRootPath;
+        // appended so all of these paths end with a /
+        return _homeFiles.FullNormalizedRootPath + "/";
     }
 
     [LuaMember("read")]
