@@ -7,7 +7,7 @@ local table_util = lib("table_util")
 local outputDirectory = ".build"
 
 -- forward slashes so it's easier to compare
-local productionPath = "~/Crater"
+local productionPath = "D:/Crater"
 
 print("Copying library to local path")
 files.copy("Library", files.localDirectory() .. "Library")

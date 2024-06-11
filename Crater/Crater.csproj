@@ -7,11 +7,11 @@
         <Nullable>enable</Nullable>
         <TieredCompilation>false</TieredCompilation>
         <PublishSingleFile>true</PublishSingleFile>
-        <AssemblyName>Crater</AssemblyName>
+        <AssemblyName>crater</AssemblyName>
         <RootNamespace>Crater</RootNamespace>
         <PackageId>Crater</PackageId>
         <Authors>NotExplosive</Authors>
-        <Company>Crater</Company>
+        <Company>NotExplosive</Company>
         <Product>Crater</Product>
     </PropertyGroup>
 
