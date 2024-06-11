@@ -25,6 +25,10 @@ if isLocal then
     print("LOCAL ONLY")
 end
 
+if not isLocal then
+    assert(git.isWorkspaceClean(), "You have uncommitted changes")
+end
+
 print("Publishing")
 dotnet.publish(".", outputDirectory)
 
