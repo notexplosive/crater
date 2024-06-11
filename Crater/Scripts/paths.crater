@@ -1,1 +1,3 @@
-﻿print("local", files.localDirectory())
+﻿print("local   :", files.localDirectory())
+print("working :", files.workingDirectory())
+print("home    :", files.homeDirectory())
