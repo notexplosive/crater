@@ -2,6 +2,4 @@
 local string_util = lib("string_util")
 local version = lib("version")
 
-program.runFork("notepad")
-
-print("hello")
+print(files.homeDirectory())

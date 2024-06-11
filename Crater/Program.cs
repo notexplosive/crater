@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Crater;
+using ExplogineCore;
 using ExplogineCore.Lua;
 using MoonSharp.Interpreter;
 
@@ -47,7 +48,9 @@ if (args.Length > 0)
     }
 
     luaRuntime.SetGlobal("args", argsTable);
-    luaRuntime.SetGlobal("files", new FilesModule(luaRuntime, paths.WorkingFiles, paths.LocalFiles));
+    luaRuntime.SetGlobal("files",
+        new FilesModule(luaRuntime, paths.WorkingFiles, paths.LocalFiles,
+            new RealFileSystem(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))));
     luaRuntime.SetGlobal("program", new ProgramModule(luaRuntime));
     luaRuntime.SetGlobal("lib", (string path) =>
     {

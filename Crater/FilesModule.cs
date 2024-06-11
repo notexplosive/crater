@@ -14,13 +14,15 @@ public class FilesModule
     private const string DeletePrefix = "💥";
     private readonly RealFileSystem _workingFiles;
     private readonly RealFileSystem _localFiles;
+    private readonly RealFileSystem _homeFiles;
     private readonly LuaRuntime _luaRuntime;
 
-    public FilesModule(LuaRuntime luaRuntime, RealFileSystem workingFiles, RealFileSystem localFiles)
+    public FilesModule(LuaRuntime luaRuntime, RealFileSystem workingFiles, RealFileSystem localFiles, RealFileSystem homeFiles)
     {
         _luaRuntime = luaRuntime;
         _workingFiles = workingFiles;
         _localFiles = localFiles;
+        _homeFiles = homeFiles;
     }
 
     [LuaMember("workingDirectory")]
@@ -35,6 +37,11 @@ public class FilesModule
         return _localFiles.FullNormalizedRootPath;
     }
     
+    [LuaMember("homeDirectory")]
+    public string HomeDirectory()
+    {
+        return _homeFiles.FullNormalizedRootPath;
+    }
 
     [LuaMember("read")]
     public string Read(string path)
