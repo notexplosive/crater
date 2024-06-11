@@ -28,7 +28,8 @@ public class FilesModule
     [LuaMember("workingDirectory")]
     public string WorkingDirectory()
     {
-        return _workingFiles.FullNormalizedRootPath;
+        // appended so all of these paths end with a /
+        return _workingFiles.FullNormalizedRootPath + "/";
     }
     
     [LuaMember("localDirectory")]
