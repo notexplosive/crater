@@ -6,15 +6,14 @@ local table_util = lib("table_util")
 
 local outputDirectory = ".build"
 
--- forward slashes so it's easier to compare
-local productionPath = "D:/Crater"
+local productionPath = files.homeDirectory() .. "Crater"
 
 print("Copying library to local path")
 files.copy("Library", files.localDirectory() .. "Library")
 
 if string.match(files.localDirectory(), productionPath) then
     error(
-        "You're running deploy from production, this will not work because crater will have to delete itself in the process")
+            "You're running deploy from production, this will not work because crater will have to delete itself in the process")
 end
 
 assert(table_util, "You didn't have a Library before this run. Please run again")
