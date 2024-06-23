@@ -1,20 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 
-namespace Crater.ExternalPrograms;
-
-public class ProgramOutput
-{
-    public readonly bool WasSuccessful;
-
-    public ProgramOutput(bool wasSuccessful, string[] output)
-    {
-        WasSuccessful = wasSuccessful;
-        Output = output;
-    }
-
-    public string[] Output { get; }
-}
+namespace Crater;
 
 public class ExternalProgram
 {

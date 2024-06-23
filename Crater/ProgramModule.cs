@@ -1,11 +1,10 @@
-﻿using Crater.ExternalPrograms;
-using ExplogineCore.Lua;
+﻿using ExplogineCore.Lua;
 using MoonSharp.Interpreter;
 
 namespace Crater;
 
 [LuaBoundType]
-public class ProgramModule
+public class ProgramModule : CraterModule
 {
     private readonly LuaRuntime _luaRuntime;
 

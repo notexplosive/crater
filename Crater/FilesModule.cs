@@ -5,19 +5,20 @@ using MoonSharp.Interpreter;
 namespace Crater;
 
 [LuaBoundType]
-public class FilesModule
+public class FilesModule : CraterModule
 {
     private const string FolderPrefix = "📂";
     private const string FilePrefix = "📄";
     private const string WritePrefix = "📝";
     private const string CopyPrefix = "🔄";
     private const string DeletePrefix = "💥";
-    private readonly RealFileSystem _workingFiles;
-    private readonly RealFileSystem _localFiles;
     private readonly RealFileSystem _homeFiles;
+    private readonly RealFileSystem _localFiles;
     private readonly LuaRuntime _luaRuntime;
+    private readonly RealFileSystem _workingFiles;
 
-    public FilesModule(LuaRuntime luaRuntime, RealFileSystem workingFiles, RealFileSystem localFiles, RealFileSystem homeFiles)
+    public FilesModule(LuaRuntime luaRuntime, RealFileSystem workingFiles, RealFileSystem localFiles,
+        RealFileSystem homeFiles)
     {
         _luaRuntime = luaRuntime;
         _workingFiles = workingFiles;
@@ -31,13 +32,13 @@ public class FilesModule
         // appended so all of these paths end with a /
         return _workingFiles.FullNormalizedRootPath + "/";
     }
-    
+
     [LuaMember("localDirectory")]
     public string LocalDirectory()
     {
         return _localFiles.FullNormalizedRootPath;
     }
-    
+
     [LuaMember("homeDirectory")]
     public string HomeDirectory()
     {
@@ -146,7 +147,8 @@ public class FilesModule
 
             foreach (var sourceItemRelativePath in sourceDirectory.GetFilesAt("."))
             {
-                Log.Info(FilesModule.CopyPrefix, $"Copying file {sourceItemRelativePath} to directory {destinationPath}");
+                Log.Info(FilesModule.CopyPrefix,
+                    $"Copying file {sourceItemRelativePath} to directory {destinationPath}");
                 var sourceItemContent = sourceDirectory.ReadBytes(sourceItemRelativePath);
                 destinationDirectory.WriteToFileBytes(sourceItemRelativePath, sourceItemContent);
             }

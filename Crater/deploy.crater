@@ -40,6 +40,12 @@ files.write("VERSION", newVersion)
 print("Copying Version File")
 files.copy("VERSION", outputDirectory)
 
+print("Copying new Library to output")
+files.copy("Library", outputDirectory .. "/Library")
+
+print("Copying new Scripts to output")
+files.copy("Scripts", outputDirectory .. "/Scripts")
+
 if not isLocal then
     print("Uploading to itch")
     butler.push(outputDirectory, "notexplosive", "crater", "windows")
@@ -50,12 +56,6 @@ files.deleteDirectory(productionPath)
 
 print("Copying new instance to production")
 files.copy(".build", productionPath)
-
-print("Copying new Library to production")
-files.copy("Library", productionPath .. "/Library")
-
-print("Copying new Scripts to production")
-files.copy("Scripts", productionPath .. "/Scripts")
 
 if not isLocal then
     program.run("crater", { "commit_and_push", "Bump version after deploy" })

@@ -5,6 +5,26 @@ else
     local libName = args[1]
     local foundLib = lib(libName)
 
+    if libName == "files" then
+        print(files.help())
+        return
+    end
+
+    if libName == "program" then
+        print(program.help())
+        return
+    end
+
+    if libName == "lib" then
+        print("lib() is a function that works like require() but instead of searching the working directory, it searches the Scripts directory next to the crater executable")
+        return
+    end
+
+    if libName == "args" then
+        print("args is a table that represents the arguments passed to this crater program")
+        return
+    end
+
     if foundLib == nil then
         error("unknown lib " .. libName)
     end

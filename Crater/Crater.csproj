@@ -22,11 +22,4 @@
     <PropertyGroup>
         <ApplicationIcon>Crater.ico</ApplicationIcon>
     </PropertyGroup>
-    
-    <ItemGroup>
-      <None Update="test.crater">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>
