@@ -1,11 +1,14 @@
 ﻿using System.Reflection;
 using System.Text;
 using ExplogineCore.Lua;
+using MoonSharp.Interpreter;
 
 namespace Crater;
 
 public abstract class CraterModule
 {
+    public abstract string ModuleName { get; }
+
     [LuaMember("help")]
     public string Help()
     {
@@ -21,7 +24,8 @@ public abstract class CraterModule
                 {
                     var methodInfo = (member as MethodInfo)!;
                     var parameters = string.Join(", ", methodInfo.GetParameters().Select(a => a.Name));
-                    stringBuilder.AppendLine($"\tfunction: {attribute.LuaVisibleName}({parameters})");
+                    stringBuilder.AppendLine(
+                        $"\tfunction: {attribute.LuaVisibleName}({parameters}) -> {CraterModule.TypeToSafeName(methodInfo.ReturnType)}");
                 }
                 else
                 {
@@ -33,5 +37,8 @@ public abstract class CraterModule
         return stringBuilder.ToString();
     }
 
-    public abstract string ModuleName { get; }
+    private static string TypeToSafeName(Type type)
+    {
+        return type == typeof(DynValue) ? "any" : type.Name.ToLower();
+    }
 }
