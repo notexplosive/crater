@@ -10,9 +10,9 @@ public abstract class CraterModule
     public string Help()
     {
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine("files gives you access to the local filesystem with convenience functions");
+        stringBuilder.AppendLine($"{ModuleName} gives you access to the local filesystem with convenience functions");
 
-        foreach (var member in typeof(FilesModule).GetMembers()
+        foreach (var member in GetType().GetMembers()
                      .Where(method => Attribute.IsDefined(method, typeof(LuaMemberAttribute))))
         {
             foreach (var attribute in member.GetCustomAttributes<LuaMemberAttribute>())
@@ -32,4 +32,6 @@ public abstract class CraterModule
 
         return stringBuilder.ToString();
     }
+
+    public abstract string ModuleName { get; }
 }

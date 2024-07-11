@@ -48,10 +48,11 @@ if (args.Length > 0)
     }
 
     luaRuntime.SetGlobal("args", argsTable);
-    luaRuntime.SetGlobal("files",
-        new FilesModule(luaRuntime, paths.WorkingFiles, paths.LocalFiles,
-            new RealFileSystem(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))));
-    luaRuntime.SetGlobal("program", new ProgramModule(luaRuntime));
+    var filesModule = new FilesModule(luaRuntime, paths.WorkingFiles, paths.LocalFiles,
+        new RealFileSystem(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)));
+    var programModule = new ProgramModule(luaRuntime);
+    luaRuntime.SetGlobal(filesModule.ModuleName, filesModule);
+    luaRuntime.SetGlobal(programModule.ModuleName, programModule);
     luaRuntime.SetGlobal("lib", (string path) =>
     {
         var libraryId = path + ".lua";

@@ -159,4 +159,6 @@ public class FilesModule : CraterModule
             throw new Exception($"Cannot copy from non-file {sourcePath} to file {destinationPath}");
         }
     }
+
+    public override string ModuleName { get; } = "files";
 }

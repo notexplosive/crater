@@ -78,4 +78,6 @@ public class ProgramModule : CraterModule
 
         return finalArgs.ToArray();
     }
+
+    public override string ModuleName { get; } = "program";
 }
