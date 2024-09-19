@@ -5,15 +5,11 @@ else
     local libName = args[1]
     local foundLib = lib(libName)
 
-    if libName == "files" then
-        print(files.help())
+    if type(_G[libName]) == "userdata" and _G[libName].help then
+        print(_G[libName].help())
         return
     end
 
-    if libName == "program" then
-        print(program.help())
-        return
-    end
 
     if libName == "lib" then
         print("lib() is a function that works like require() but instead of searching the working directory, it searches the Scripts directory next to the crater executable")

@@ -160,5 +160,13 @@ public class FilesModule : CraterModule
         }
     }
 
-    public override string ModuleName { get; } = "files";
+    public override string LuaReadableName()
+    {
+        return "files";
+    }
+
+    protected override string LuaReadableDescription()
+    {
+        return "gives you access to the local filesystem with convenience functions";
+    }
 }

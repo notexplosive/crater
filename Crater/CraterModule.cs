@@ -7,13 +7,13 @@ namespace Crater;
 
 public abstract class CraterModule
 {
-    public abstract string ModuleName { get; }
+    public abstract string LuaReadableName();
 
     [LuaMember("help")]
     public string Help()
     {
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine($"{ModuleName} gives you access to the local filesystem with convenience functions");
+        stringBuilder.AppendLine($"{LuaReadableName()} {LuaReadableDescription()}");
 
         foreach (var member in GetType().GetMembers()
                      .Where(method => Attribute.IsDefined(method, typeof(LuaMemberAttribute))))
@@ -36,6 +36,8 @@ public abstract class CraterModule
 
         return stringBuilder.ToString();
     }
+
+    protected abstract string LuaReadableDescription();
 
     private static string TypeToSafeName(Type type)
     {

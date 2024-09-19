@@ -48,11 +48,20 @@ if (args.Length > 0)
     }
 
     luaRuntime.SetGlobal("args", argsTable);
-    var filesModule = new FilesModule(luaRuntime, paths.WorkingFiles, paths.LocalFiles,
-        new RealFileSystem(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)));
-    var programModule = new ProgramModule(luaRuntime);
-    luaRuntime.SetGlobal(filesModule.ModuleName, filesModule);
-    luaRuntime.SetGlobal(programModule.ModuleName, programModule);
+
+    var modules = new CraterModule[]
+    {
+        new FilesModule(luaRuntime, paths.WorkingFiles, paths.LocalFiles,
+            new RealFileSystem(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))),
+        new ProgramModule(luaRuntime),
+        new StringModule(luaRuntime)
+    };
+
+    foreach (var module in modules)
+    {
+        luaRuntime.SetGlobal(module.LuaReadableName(), module);
+    }
+
     luaRuntime.SetGlobal("lib", (string path) =>
     {
         var libraryId = path + ".lua";

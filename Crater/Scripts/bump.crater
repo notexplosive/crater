@@ -1,0 +1,27 @@
+local version = lib "version"
+
+local versionFile = "VERSION"
+
+local newVersion = nil
+local currentVersion = files.read(versionFile)
+
+if not version.isValid(currentVersion) then
+    currentVersion = "0.0.0"
+end
+
+
+if args[1] == "major" then
+    newVersion = version.bumpMajor(currentVersion)
+elseif args[1] == "minor" then
+    newVersion = version.bumpMinor(currentVersion)
+elseif args[1] == "patch" then
+    newVersion = version.bumpPatch(currentVersion)
+end
+
+if newVersion == nil then
+    print("Please specify major/minor/patch")
+    return
+end
+
+print("Bumping version: " .. newVersion)
+files.write(versionFile, newVersion)

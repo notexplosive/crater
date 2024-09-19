@@ -7,6 +7,7 @@ namespace Crater;
 public class ProgramModule : CraterModule
 {
     private readonly LuaRuntime _luaRuntime;
+    private readonly string _moduleName = "program";
 
     public ProgramModule(LuaRuntime luaRuntime)
     {
@@ -79,5 +80,9 @@ public class ProgramModule : CraterModule
         return finalArgs.ToArray();
     }
 
-    public override string ModuleName { get; } = "program";
+    public override string LuaReadableName() => _moduleName;
+    protected override string LuaReadableDescription()
+    {
+        return "provides an easy wrapper for running programs";
+    }
 }
