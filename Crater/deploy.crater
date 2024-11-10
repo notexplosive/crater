@@ -6,6 +6,8 @@ local table_util = lib("table_util")
 
 local outputDirectory = ".build"
 
+files.deleteDirectory(outputDirectory)
+
 local productionPath = files.homeDirectory() .. "Crater"
 
 print("Copying library to local path")
