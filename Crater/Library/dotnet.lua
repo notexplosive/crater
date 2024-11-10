@@ -2,7 +2,7 @@ local dotnet = {
     description = "dotnet utilities"
 }
 
--- createts args for `[dotnet] run`
+-- creates args for `[dotnet] run`
 local function parseRunArgs(csprojPath, givenArgs)
     local finalArgs = {
         "run",
@@ -21,25 +21,28 @@ end
 -- runs dotnet project in a given "mode"
 -- mode = "Silent" | "Fork" | nil
 local function runDotnetArgs(mode, csprojPath, givenArgs)
-    local programRun = program["run".. (mode or "")]
+    local programRun = program["run" .. (mode or "")]
     programRun("dotnet", parseRunArgs(csprojPath, givenArgs))
 end
 
-function dotnet.publish(csprojPath, absoluteOutputPath)
+function dotnet.publish(csprojPath, absoluteOutputPath, platform)
+    if platform == nil then
+        platform = "win-x64"
+    end
+
     program.runSilent("dotnet",
-            { "publish", csprojPath,
-              "-c", "Release",
-              "-r", "win-x64",
-              "/p:PublishReadyToRun=false",
-              "/p:TieredCompilation=false",
-              "--self-contained",
-              "--output", absoluteOutputPath })
+        { "publish", csprojPath,
+            "-c", "Release",
+            "-r", platform,
+            "/p:PublishReadyToRun=false",
+            "/p:TieredCompilation=false",
+            "--self-contained",
+            "--output", absoluteOutputPath })
 end
 
 function dotnet.runFork(csprojPath, givenArgs)
     runDotnetArgs("Fork", csprojPath, givenArgs)
 end
-
 
 function dotnet.runSilent(csprojPath, givenArgs)
     runDotnetArgs("Silent", csprojPath, givenArgs)

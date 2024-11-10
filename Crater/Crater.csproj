@@ -6,7 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TieredCompilation>false</TieredCompilation>
-        <PublishSingleFile>true</PublishSingleFile>
+        <PublishSingleFile>false</PublishSingleFile>
+        <PublishReadyToRun>false</PublishReadyToRun>
         <AssemblyName>crater</AssemblyName>
         <RootNamespace>Crater</RootNamespace>
         <PackageId>Crater</PackageId>

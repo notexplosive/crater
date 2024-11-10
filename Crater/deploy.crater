@@ -13,10 +13,13 @@ files.copy("Library", files.localDirectory() .. "Library")
 
 if string.match(files.localDirectory(), productionPath) then
     error(
-            "You're running deploy from production, this will not work because crater will have to delete itself in the process")
+        "You're running deploy from production, this will not work because crater will have to delete itself in the process")
 end
 
 assert(table_util, "You didn't have a Library before this run. Please run again")
+
+local platform = args[table_util.indexOf(args, "--platform") + 1]
+print("Platform is: " .. platform)
 
 local isLocal = table_util.contains(args, "--local")
 
@@ -29,7 +32,7 @@ if not isLocal then
 end
 
 print("Publishing")
-dotnet.publish(".", outputDirectory)
+dotnet.publish(".", outputDirectory, platform)
 
 print("Bumping Version")
 local previousVersion = files.read("VERSION") or "1.0.0"
@@ -37,13 +40,8 @@ newVersion = version.bumpPatch(previousVersion)
 print("New version is: " .. newVersion)
 files.write("VERSION", newVersion)
 
-print("Copying Version File")
 files.copy("VERSION", outputDirectory)
-
-print("Copying new Library to output")
 files.copy("Library", outputDirectory .. "/Library")
-
-print("Copying new Scripts to output")
 files.copy("Scripts", outputDirectory .. "/Scripts")
 
 if not isLocal then
@@ -55,7 +53,12 @@ print("Deleting old production instance")
 files.deleteDirectory(productionPath)
 
 print("Copying new instance to production")
-files.copy(".build", productionPath)
+files.copy(outputDirectory, productionPath)
+
+-- trim platform string before compare
+if platform and platform:gsub("%s+", "") == "linux-x64" then
+    program.run("chmod", { "u+x", productionPath .. "/" .. "crater" })
+end
 
 if not isLocal then
     program.run("crater", { "commit_and_push", "Bump version after deploy" })
