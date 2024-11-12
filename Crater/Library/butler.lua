@@ -7,19 +7,32 @@ function butler.login()
     program.run("butler", { "login" })
 end
 
-function butler.push(directory, itchUrl, gameUrl, channel)
+local function internalPush(directory, itchUrl, gameUrl, channel, isDryRun)
     assert(directory, "directory is nil")
     assert(itchUrl, "itchUrl is nil")
     assert(gameUrl, "gameUrl is nil")
     assert(channel, "channel is nil")
-    
-    local args = { "push", directory, itchUrl .. "/" .. gameUrl .. ":" .. channel }
+
+    local dryRunString = ""
+    if isDryRun then
+        dryRunString  = "--dry-run"
+    end
+
+    local args = { "push", dryRunString, directory, itchUrl .. "/" .. gameUrl .. ":" .. channel }
 
     if version.isValid(files.read("VERSION")) then
         table.insert(args, "--userversion-file=VERSION")
     end
-    
+
     program.run("butler", args)
+end
+
+function butler.push(directory, itchUrl, gameUrl, channel)
+    internalPush(directory, itchUrl, gameUrl, channel, false)
+end
+
+function butler.pushDry(directory, itchUrl, gameUrl, channel)
+    internalPush(directory, itchUrl, gameUrl, channel, true)
 end
 
 return butler
