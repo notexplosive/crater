@@ -1,1 +1,1 @@
-dotnet run --project Crater.csproj -- deploy.crater --local --platform osx-arm64
+dotnet run --project Crater.csproj -- deploy.crater --local --platform win-x64
