@@ -36,7 +36,8 @@ function explogine.upload(info, targetPlatform)
     local targetDirectory = platformToDirectory[targetPlatform]
 
     if targetDirectory == nil then
-        print("upload cancelled")
+        print("could not parse target")
+        print("expected: mac, windows, linux")
         return;
     end
 
