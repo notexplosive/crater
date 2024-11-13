@@ -6,6 +6,8 @@ local dotnet = lib "dotnet"
 macos_build.universalArchitecture = "macos-universal"
 
 function macos_build.makeApp(platformBuildDirectory, csproj, appName, iconPath, copyExtraFiles, platformBuild)
+    -- todo: assert(files.exists("Info.plist"))
+
     local appDirectory = platformBuildDirectory .. "/" .. appName .. ".app"
     local contentDirectory = appDirectory .. "/" .. "Contents"
     local resourcesDirectory = contentDirectory .. "/" .. "Resources"
