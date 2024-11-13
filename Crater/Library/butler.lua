@@ -13,12 +13,10 @@ local function internalPush(directory, itchUrl, gameUrl, channel, isDryRun)
     assert(gameUrl, "gameUrl is nil")
     assert(channel, "channel is nil")
 
-    local dryRunString = ""
+    local args = { "push", directory, itchUrl .. "/" .. gameUrl .. ":" .. channel }
     if isDryRun then
-        dryRunString  = "--dry-run"
+        table.insert(args, 1, "--dry-run")
     end
-
-    local args = { "push", dryRunString, directory, itchUrl .. "/" .. gameUrl .. ":" .. channel }
 
     if version.isValid(files.read("VERSION")) then
         table.insert(args, "--userversion-file=VERSION")
