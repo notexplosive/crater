@@ -5,10 +5,10 @@ local explogine = {
 local git = lib "git"
 local butler = lib "butler"
 local macos_build = lib "explogine_macos"
-local platforms = { "macos-universal", "win-x64", "linux-x64" }
+explogine.platforms = { "macos-universal", "win-x64", "linux-x64" }
 
 function explogine.publish(appName, platformBuild, copyExtraFiles, iconPath, platformToProject, buildDirectoryForPlatform)
-    for i, platform in pairs(platforms) do
+    for i, platform in pairs(explogine.platforms) do
         local csproj = platformToProject[platform]
 
         if csproj then
