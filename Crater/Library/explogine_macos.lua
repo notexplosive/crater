@@ -141,7 +141,7 @@ function macos_build.makeApp(platformBuildDirectory, csproj, appName, iconPath, 
     createMacIcon()
 
     if copyExtraFiles then
-        copyExtraFiles(resourcesDirectory, platformBuildDirectory)
+        copyExtraFiles(macos_build.universalArchitecture, resourcesDirectory, platformBuildDirectory)
     end
 
     -- testRun()

@@ -18,7 +18,7 @@ function explogine.publish(appName, platformBuild, copyExtraFiles, iconPath, pla
                 macos_build.makeApp(platformBuildDirectory, csproj, appName, iconPath, copyExtraFiles, platformBuild)
             else
                 platformBuild(csproj, platform)
-                copyExtraFiles(platformBuildDirectory, platformBuildDirectory)
+                copyExtraFiles(platform, platformBuildDirectory, platformBuildDirectory)
             end
         end
     end
@@ -26,10 +26,10 @@ end
 
 function explogine.upload(info, targetPlatform)
     local build = info.buildDirectory
-    
+
     local platformToDirectory = {
-        ["mac"] = build.."/".."macos-universal",
-        ["windows"] = build .. "/" .."win-x64",
+        ["mac"] = build .. "/" .. "macos-universal",
+        ["windows"] = build .. "/" .. "win-x64",
         ["linux"] = build .. "/" .. "linux-x64"
     }
 
