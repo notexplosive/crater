@@ -54,7 +54,8 @@ if (args.Length > 0)
         new FilesModule(luaRuntime, paths.WorkingFiles, paths.LocalFiles,
             new RealFileSystem(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))),
         new ProgramModule(luaRuntime),
-        new StringModule(luaRuntime)
+        new StringModule(luaRuntime),
+        new SystemModule(luaRuntime)
     };
 
     foreach (var module in modules)

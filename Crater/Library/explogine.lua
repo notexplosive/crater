@@ -8,18 +8,26 @@ local macos_build = lib "explogine_macos"
 explogine.platforms = { "macos-universal", "win-x64", "linux-x64" }
 
 function explogine.publish(appName, platformBuild, copyExtraFiles, iconPath, platformToProject, buildDirectoryForPlatform)
-    for i, platform in pairs(explogine.platforms) do
-        local csproj = platformToProject[platform]
+    local canBuildMacOs = system.platform() == "macos"
 
-        if csproj then
-            local platformBuildDirectory = buildDirectoryForPlatform(platform)
+    for _, platform in pairs(explogine.platforms) do
+        local isMacOs = platform == "macos-universal"
 
-            if platform == "macos-universal" then
-                macos_build.makeApp(platformBuildDirectory, csproj, appName, iconPath, copyExtraFiles, platformBuild)
-            else
-                platformBuild(csproj, platform)
-                copyExtraFiles(platform, platformBuildDirectory, platformBuildDirectory)
+        if (isMacOs and canBuildMacOs) or not isMacOs then
+            local csproj = platformToProject[platform]
+
+            if csproj then
+                local platformBuildDirectory = buildDirectoryForPlatform(platform)
+
+                if isMacOs then
+                    macos_build.makeApp(platformBuildDirectory, csproj, appName, iconPath, copyExtraFiles, platformBuild)
+                else
+                    platformBuild(csproj, platform)
+                    copyExtraFiles(platform, platformBuildDirectory, platformBuildDirectory)
+                end
             end
+        else
+            print("Skipping: " .. platform)
         end
     end
 end
@@ -38,7 +46,7 @@ function explogine.upload(info, targetPlatform)
     if targetDirectory == nil then
         print("could not parse target")
         print("expected: mac, windows, linux")
-        return;
+        return ;
     end
 
     print("target directory: ", targetDirectory)
