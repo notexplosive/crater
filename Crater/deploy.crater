@@ -58,7 +58,7 @@ print("Copying new instance to production")
 files.copy(outputDirectory, productionPath)
 
 -- trim platform string before compare
-if platform and platform:gsub("%s+", "") == "linux-x64" then
+if platform and platform:gsub("%s+", "") ~= "win-x64" then
     program.run("chmod", { "u+x", productionPath .. "/" .. "crater" })
 end
 

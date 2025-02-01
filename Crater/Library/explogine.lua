@@ -4,7 +4,7 @@ local explogine = {
 
 local git = lib "git"
 local butler = lib "butler"
-local macos_build = lib "explogine_macos"
+local explogine_macos = lib "explogine_macos"
 explogine.platforms = { "macos-universal", "win-x64", "linux-x64" }
 
 function explogine.publish(appName, platformBuild, copyExtraFiles, iconPath, platformToProject, buildDirectoryForPlatform)
@@ -20,7 +20,8 @@ function explogine.publish(appName, platformBuild, copyExtraFiles, iconPath, pla
                 local platformBuildDirectory = buildDirectoryForPlatform(platform)
 
                 if isMacOs then
-                    macos_build.makeApp(platformBuildDirectory, csproj, appName, iconPath, copyExtraFiles, platformBuild)
+                    explogine_macos.makeApp(platformBuildDirectory, csproj, appName, iconPath, copyExtraFiles,
+                        platformBuild)
                 else
                     platformBuild(csproj, platform)
                     copyExtraFiles(platform, platformBuildDirectory, platformBuildDirectory)
@@ -46,7 +47,7 @@ function explogine.upload(info, targetPlatform)
     if targetDirectory == nil then
         print("could not parse target")
         print("expected: mac, windows, linux")
-        return ;
+        return;
     end
 
     print("target directory: ", targetDirectory)
