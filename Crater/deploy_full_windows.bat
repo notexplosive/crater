@@ -1,0 +1,1 @@
+dotnet run --project .\Crater.csproj -- deploy.crater --platform win-x64

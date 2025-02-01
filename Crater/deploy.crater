@@ -46,7 +46,7 @@ files.copy("VERSION", outputDirectory)
 files.copy("Library", outputDirectory .. "/Library")
 files.copy("Scripts", outputDirectory .. "/Scripts")
 
-if not isLocal then
+if not isLocal and system.platform() == "windows" then
     print("Uploading to itch")
     butler.push(outputDirectory, "notexplosive", "crater", "windows")
 end
