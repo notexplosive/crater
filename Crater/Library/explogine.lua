@@ -33,7 +33,13 @@ function explogine.publish(appName, platformBuild, copyExtraFiles, iconPath, pla
     end
 end
 
-function explogine.upload(info, targetPlatform)
+function explogine.upload(info, targetPlatform, channelSuffix)
+    if channelSuffix ~= nil then
+        channelSuffix = "_" .. channelSuffix
+    else
+        channelSuffix = ""
+    end
+    
     local build = info.buildDirectory
 
     local platformToDirectory = {
@@ -58,7 +64,7 @@ function explogine.upload(info, targetPlatform)
         return
     end
 
-    butler.push(targetDirectory, "notexplosive", info.itchUrl, info.butlerChannelForPlatform(targetPlatform))
+    butler.push(targetDirectory, "notexplosive", info.itchUrl, info.butlerChannelForPlatform(targetPlatform) .. channelSuffix)
 end
 
 return explogine
